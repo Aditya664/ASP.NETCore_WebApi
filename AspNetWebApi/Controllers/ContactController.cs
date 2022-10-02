@@ -34,7 +34,7 @@ namespace AspNetWebApi.Controllers
             return Ok(contact);
         }
         [HttpPost]
-        public ActionResult AddContact(AddContactRequest request){
+        public ActionResult AddContact([FromBody]AddContactRequest request){
             var contact = new Contact()
             {
                 Id = Guid.NewGuid(),
@@ -47,6 +47,15 @@ namespace AspNetWebApi.Controllers
             _context.contacts.Add(contact);
             _context.SaveChanges(); 
             return CreatedAtAction(nameof(GetContact),new {id = contact.Id},contact);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteContact(Guid id){
+            var contact = _context.contacts.Where(x => x.Id == id).FirstOrDefault();
+            if(contact == null) return NotFound();
+            _context.contacts.Remove(contact);
+            _context.SaveChanges();
+            return Ok(contact);
         }
     }
 }
