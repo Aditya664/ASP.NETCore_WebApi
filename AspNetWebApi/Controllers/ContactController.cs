@@ -57,5 +57,20 @@ namespace AspNetWebApi.Controllers
             _context.SaveChanges();
             return Ok(contact);
         }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateContact(Guid id,[FromBody]UpdateContactRequest request){
+            var found = _context.contacts.Find(id);
+            if(found != null){
+                found.FullName = request.FullName;
+                found.Email = request.Email;
+                found.Phone = request.Phone;
+                found.Address = request.Address;
+                _context.SaveChanges();
+                return Ok(found);
+            }
+            return NotFound();
+
+        }
     }
 }
